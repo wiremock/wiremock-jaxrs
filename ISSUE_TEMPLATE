@@ -1,0 +1,3 @@
+Pull requests are welcome. It is preferred if you can re-produce your problem, or show your feature, with a test case.
+
+This tool only helps configure Wiremock. Any Wiremock-issues should be reported at: https://github.com/tomakehurst/wiremock
