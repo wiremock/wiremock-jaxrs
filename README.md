@@ -1,7 +1,7 @@
 # Wiremock JAX-RS
 [![Build Status](https://travis-ci.org/tomasbjerre/wiremock-jaxrs.svg?branch=master)](https://travis-ci.org/tomasbjerre/wiremock-jaxrs)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/se.bjurr.violations/wiremock-jaxrs/badge.svg)](https://maven-badges.herokuapp.com/maven-central/se.bjurr.violations/wiremock-jaxrs)
-[![Bintray](https://api.bintray.com/packages/tomasbjerre/tomasbjerre/se.bjurr.violations%3Awiremock-jaxrs/images/download.svg) ](https://bintray.com/tomasbjerre/tomasbjerre/se.bjurr.violations%3Awiremock-jaxrs/_latestVersion)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/se.bjurr.wiremock/wiremock-jaxrs/badge.svg)](https://maven-badges.herokuapp.com/maven-central/se.bjurr.wiremock/wiremock-jaxrs)
+[![Bintray](https://api.bintray.com/packages/tomasbjerre/tomasbjerre/se.bjurr.wiremock%3Awiremock-jaxrs/images/download.svg) ](https://bintray.com/tomasbjerre/tomasbjerre/se.bjurr.wiremock%3Awiremock-jaxrs/_latestVersion)
 
 [Wiremock](http://wiremock.org/) with JAX-RS support. Enables creation of stubs from JAX-RS annotated resources. It:
 
@@ -27,7 +27,7 @@ That is used like:
 ```java
 import static com.github.tomakehurst.wiremock.client.WireMockJaxrs.invocation;
 ...
-invocation(TestResouce.class, (r) -> r.whateverMethod(anyParameterValue))
+invocation(ItemResouce.class, (r) -> r.whateverMethod(anyParameterValue))
 ```
 
 ### Example
@@ -71,7 +71,7 @@ It creates a stub (as described [here](http://wiremock.org/docs/stubbing/)):
 }
 ```
 
-When `TestResource` looks like:
+When `ItemResource` looks like:
 
 ```java
 @Path("/")

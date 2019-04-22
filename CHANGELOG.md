@@ -6,10 +6,10 @@ Changelog of Wiremock jaxrs.
 ## Unreleased
 ### No issue
 
-**initial**
+**Doc**
 
 
-[7206ce53e7f3b0a](https://github.com/tomasbjerre/wiremock-jaxrs/commit/7206ce53e7f3b0a) Tomas Bjerre *2019-04-22 16:01:31*
+[1f7c23bdeb85141](https://github.com/tomasbjerre/wiremock-jaxrs/commit/1f7c23bdeb85141) Tomas Bjerre *2019-04-22 17:03:25*
 
 
  
