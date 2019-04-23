@@ -102,9 +102,10 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
 
   private static String toJson(final Object object) {
     try {
-      final ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.setSerializationInclusion(Include.NON_EMPTY);
-      return objectMapper.writeValueAsString(object);
+      return new ObjectMapper() //
+          .setSerializationInclusion(Include.NON_EMPTY) //
+          .writerWithDefaultPrettyPrinter()
+          .writeValueAsString(object);
     } catch (final JsonProcessingException e) {
       throw new RuntimeException(e.getMessage(), e);
     }

@@ -9,7 +9,7 @@ Changelog of Wiremock jaxrs.
 **Doc**
 
 
-[1f7c23bdeb85141](https://github.com/tomasbjerre/wiremock-jaxrs/commit/1f7c23bdeb85141) Tomas Bjerre *2019-04-22 17:03:25*
+[e3da2b59534e67a](https://github.com/tomasbjerre/wiremock-jaxrs/commit/e3da2b59534e67a) Tomas Bjerre *2019-04-23 14:31:09*
 
 
  

@@ -54,7 +54,7 @@ public class WiremockJaxrsGetIntergrationTest extends AcceptanceTestBase {
                 + "  },\n"
                 + "  \"response\" : {\n"
                 + "    \"status\" : 202,\n"
-                + "    \"body\" : \"{\\\"str\\\":\\\"pong\\\"}\",\n"
+                + "    \"body\" : \"{\\n  \\\"str\\\" : \\\"pong\\\"\\n}\",\n"
                 + "    \"headers\" : {\n"
                 + "      \"Content-Type\" : \"application/json\"\n"
                 + "    }\n"
