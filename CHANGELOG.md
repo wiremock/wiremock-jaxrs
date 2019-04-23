@@ -6,6 +6,11 @@ Changelog of Wiremock jaxrs.
 ## Unreleased
 ### No issue
 
+**Pretty printing JSON**
+
+
+[a120b7e9145e1ac](https://github.com/tomasbjerre/wiremock-jaxrs/commit/a120b7e9145e1ac) Tomas Bjerre *2019-04-23 15:00:41*
+
 **Doc**
 
 

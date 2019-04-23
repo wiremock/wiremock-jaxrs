@@ -80,6 +80,78 @@ public class WiremockJaxrsGetIntergrationTest extends AcceptanceTestBase {
                 + "}",
             ""
           }, //
+          { //
+            new StringDTO("pong"), //
+            ri((r) -> r.getWithQueryParams("value1", "value2", null)), //
+            Arrays.asList(
+                "/getWithQueryParams?oneparam=value1&secondparam=value2",
+                "/getWithQueryParams?secondparam=value2&oneparam=value1"), //
+            "{\n"
+                + "  \"id\" : \"d68fb4e2-48ed-40d2-bc73-0a18f54f3ece\",\n"
+                + "  \"request\" : {\n"
+                + "    \"urlPattern\" : \".*/getWithQueryParams\\\\?.*\",\n"
+                + "    \"method\" : \"GET\",\n"
+                + "    \"headers\" : {\n"
+                + "      \"Accept\" : {\n"
+                + "        \"equalTo\" : \"application/json\"\n"
+                + "      }\n"
+                + "    },\n"
+                + "    \"queryParameters\" : {\n"
+                + "      \"oneparam\" : {\n"
+                + "        \"equalTo\" : \"value1\"\n"
+                + "      },\n"
+                + "      \"secondparam\" : {\n"
+                + "        \"equalTo\" : \"value2\"\n"
+                + "      }\n"
+                + "    }\n"
+                + "  },\n"
+                + "  \"response\" : {\n"
+                + "    \"status\" : 202,\n"
+                + "    \"body\" : \"{\\n  \\\"str\\\" : \\\"pong\\\"\\n}\",\n"
+                + "    \"headers\" : {\n"
+                + "      \"Content-Type\" : \"application/json\"\n"
+                + "    }\n"
+                + "  },\n"
+                + "  \"uuid\" : \"d68fb4e2-48ed-40d2-bc73-0a18f54f3ece\"\n"
+                + "}",
+            "application/json"
+          },
+          { //
+            new StringDTO("pong"), //
+            ri((r) -> r.getWithQueryParams("value1", null, "")), //
+            Arrays.asList(
+                "/getWithQueryParams?oneparam=value1&thirdparam=",
+                "/getWithQueryParams?thirdparam=&oneparam=value1"), //
+            "{\n"
+                + "  \"id\" : \"d68fb4e2-48ed-40d2-bc73-0a18f54f3ece\",\n"
+                + "  \"request\" : {\n"
+                + "    \"urlPattern\" : \".*/getWithQueryParams\\\\?.*\",\n"
+                + "    \"method\" : \"GET\",\n"
+                + "    \"headers\" : {\n"
+                + "      \"Accept\" : {\n"
+                + "        \"equalTo\" : \"application/json\"\n"
+                + "      }\n"
+                + "    },\n"
+                + "    \"queryParameters\" : {\n"
+                + "      \"oneparam\" : {\n"
+                + "        \"equalTo\" : \"value1\"\n"
+                + "      },\n"
+                + "      \"thirdparam\" : {\n"
+                + "        \"equalTo\" : \"\"\n"
+                + "      }\n"
+                + "    }\n"
+                + "  },\n"
+                + "  \"response\" : {\n"
+                + "    \"status\" : 202,\n"
+                + "    \"body\" : \"{\\n  \\\"str\\\" : \\\"pong\\\"\\n}\",\n"
+                + "    \"headers\" : {\n"
+                + "      \"Content-Type\" : \"application/json\"\n"
+                + "    }\n"
+                + "  },\n"
+                + "  \"uuid\" : \"d68fb4e2-48ed-40d2-bc73-0a18f54f3ece\"\n"
+                + "}",
+            "application/json"
+          }
         } //
         );
   }

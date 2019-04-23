@@ -15,9 +15,7 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
   private final JaxrsInvocationHandler handler;
 
   public JaxrsInvocationMappingBuilder(final JaxrsInvocationHandler handler) {
-    super(
-        handler.getRequestMethod(),
-        new UrlPattern(new RegexPattern(".*" + handler.getPath() + "$"), true));
+    super(handler.getRequestMethod(), new UrlPattern(new RegexPattern(get(handler)), true));
     this.handler = handler;
 
     if (!handler.getRequestContentTypeList().isEmpty()) {
@@ -41,9 +39,16 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
 
     for (final InvocationParam qp : handler.getQueryParams()) {
       final Object value = qp.getValue();
+      if (value == null) {
+        continue;
+      }
       final StringValuePattern valuePattern = getStringValuePattern(value);
       this.withQueryParam(qp.getName(), valuePattern);
     }
+  }
+
+  private static String get(final JaxrsInvocationHandler handler) {
+    return ".*" + handler.getPath() + (handler.getQueryParams().isEmpty() ? "$" : "\\?.*");
   }
 
   public BasicMappingBuilder willReturn(
@@ -91,7 +96,9 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
     StringValuePattern valuePattern = null;
     final Boolean ignoreArrayOrder = true;
     final Boolean ignoreExtraElements = true;
-    if (value.getClass().isPrimitive()) {
+    if (value.getClass() != Object.class
+        && (value.getClass().isPrimitive()
+            || value.getClass().getName().startsWith("java.lang."))) {
       valuePattern = new EqualToPattern(value.toString());
     } else {
       final String json = toJson(value);

@@ -217,10 +217,10 @@ class JaxrsInvocationHandler implements InvocationHandler {
       final List<InvocationParam> queryParams,
       final List<InvocationParam> pathParams) {
     String substituted = createPath;
-    for (final InvocationParam queryParam : queryParams) {
-      substituted = substituted.replace(queryParam.getName(), queryParam.getValue().toString());
-    }
     for (final InvocationParam pathParam : pathParams) {
+      if (pathParam.getValue() == null) {
+        throw new RuntimeException("Cannot use null value for " + pathParam.getName());
+      }
       substituted =
           substituted.replace("{" + pathParam.getName() + "}", pathParam.getValue().toString());
     }
