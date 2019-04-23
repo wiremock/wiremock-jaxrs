@@ -6,6 +6,11 @@ Changelog of Wiremock jaxrs.
 ## Unreleased
 ### No issue
 
+**Query params**
+
+
+[a8a7007513bc545](https://github.com/tomasbjerre/wiremock-jaxrs/commit/a8a7007513bc545) Tomas Bjerre *2019-04-23 15:31:39*
+
 **Pretty printing JSON**
 
 

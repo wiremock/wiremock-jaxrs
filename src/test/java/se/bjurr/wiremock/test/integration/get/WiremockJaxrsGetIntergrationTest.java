@@ -151,6 +151,32 @@ public class WiremockJaxrsGetIntergrationTest extends AcceptanceTestBase {
                 + "  \"uuid\" : \"d68fb4e2-48ed-40d2-bc73-0a18f54f3ece\"\n"
                 + "}",
             "application/json"
+          },
+          { //
+            new StringDTO("pong"), //
+            ri((r) -> r.getWithPathParams("value1", "value2", "value3")), //
+            Arrays.asList("/getWithPathParams/value1/value2/value3"), //
+            "{\n"
+                + "  \"id\" : \"d68fb4e2-48ed-40d2-bc73-0a18f54f3ece\",\n"
+                + "  \"request\" : {\n"
+                + "    \"urlPattern\" : \".*/getWithPathParams/value1/value2/value3$\",\n"
+                + "    \"method\" : \"GET\",\n"
+                + "    \"headers\" : {\n"
+                + "      \"Accept\" : {\n"
+                + "        \"equalTo\" : \"application/json\"\n"
+                + "      }\n"
+                + "    }\n"
+                + "  },\n"
+                + "  \"response\" : {\n"
+                + "    \"status\" : 202,\n"
+                + "    \"body\" : \"{\\n  \\\"str\\\" : \\\"pong\\\"\\n}\",\n"
+                + "    \"headers\" : {\n"
+                + "      \"Content-Type\" : \"application/json\"\n"
+                + "    }\n"
+                + "  },\n"
+                + "  \"uuid\" : \"d68fb4e2-48ed-40d2-bc73-0a18f54f3ece\"\n"
+                + "}",
+            "application/json"
           }
         } //
         );
