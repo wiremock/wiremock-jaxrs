@@ -3,8 +3,13 @@
 
 Changelog of Wiremock jaxrs.
 
-## Unreleased
+## 0.2
 ### No issue
+
+**Testing path params**
+
+
+[949d64a0c8b7703](https://github.com/tomasbjerre/wiremock-jaxrs/commit/949d64a0c8b7703) Tomas Bjerre *2019-04-23 15:36:54*
 
 **Query params**
 
