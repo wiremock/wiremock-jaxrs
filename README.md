@@ -30,6 +30,10 @@ import static com.github.tomakehurst.wiremock.client.WireMockJaxrs.invocation;
 invocation(ItemResouce.class, (r) -> r.whateverMethod(anyParameterValue))
 ```
 
+See also:
+
+ https://github.com/tomasbjerre/wiremock-jaxrs-example
+
 ### Example
 
 When invoked like this:
