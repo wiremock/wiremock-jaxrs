@@ -1,13 +1,13 @@
 package se.bjurr.wiremock.test.support;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
+import static io.restassured.config.EncoderConfig.encoderConfig;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.config.EncoderConfig;
+import io.restassured.RestAssured;
+import io.restassured.config.EncoderConfig;
 import java.io.File;
 import java.util.Locale;
 import org.junit.AfterClass;

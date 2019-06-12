@@ -3,7 +3,7 @@ package se.bjurr.wiremock.test.integration.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMockJaxrs.invocation;
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.given;
 import static javax.servlet.http.HttpServletResponse.SC_ACCEPTED;
 import static org.assertj.core.api.Assertions.assertThat;
 
