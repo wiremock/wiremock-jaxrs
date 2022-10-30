@@ -6,10 +6,20 @@ Changelog of Wiremock jaxrs.
 ## Unreleased
 ### No issue
 
+**doc**
+
+
+[230afb9af9e507a](https://github.com/tomasbjerre/wiremock-jaxrs/commit/230afb9af9e507a) Tomas Bjerre *2019-10-09 16:59:16*
+
+**Create FUNDING.yml**
+
+
+[269b3bc6282bbf2](https://github.com/tomasbjerre/wiremock-jaxrs/commit/269b3bc6282bbf2) Tomas Bjerre *2019-09-28 07:04:44*
+
 **Gradle 5**
 
 
-[ee70c08a11ca703](https://github.com/tomasbjerre/wiremock-jaxrs/commit/ee70c08a11ca703) Tomas Bjerre *2019-06-12 19:47:26*
+[580def50ec0949f](https://github.com/tomasbjerre/wiremock-jaxrs/commit/580def50ec0949f) Tomas Bjerre *2019-06-12 20:01:48*
 
 **doc**
 

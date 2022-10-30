@@ -42,8 +42,7 @@ public class RequestMethodsTest {
   @Test
   public void testThatRequestMethodsCanBeFound() {
     final List<String> reqMethodsNotFound =
-        Arrays.asList(RequestMethod.values())
-            .stream()
+        Arrays.asList(RequestMethod.values()).stream()
             .map((it) -> it.getName())
             .collect(Collectors.toList());
     reqMethodsNotFound.removeAll(Arrays.asList("TRACE", "ANY"));

@@ -1,29 +1,21 @@
-apply plugin: 'java'
-
-project.ext.tags = ['wiremock', 'wiremock-standalone', 'wiremock-jaxrs', 'mock', 'rest', 'jaxrs', 'jee']
-group = 'se.bjurr.wiremock'
-description = 'Wiremock with JAXRS support. Enables creating stubs from JAXRS annotated resources.'
-project.ext.useShadowJar = false
-
+apply plugin: 'java-library'
 
 buildscript {
  repositories {
-  maven { url "https://jitpack.io" }
+  mavenCentral()
+  mavenLocal()
  }
  dependencies {
-  classpath 'com.github.tomasbjerre:gradle-scripts:master-SNAPSHOT'
+  classpath 'se.bjurr.gradle:gradle-scripts:2.+'
  }
 }
-apply from: project.buildscript.classLoader.getResource('java.gradle').toURI()
-apply from: project.buildscript.classLoader.getResource('changelog.gradle').toURI()
-apply from: project.buildscript.classLoader.getResource('release.gradle').toURI()
-
+apply from: project.buildscript.classLoader.getResource('main.gradle').toURI()
 
 dependencies {
- compile 'com.github.tomakehurst:wiremock:2.23.2'
- compile 'javax:javaee-api:8.0'
+ api 'com.github.tomakehurst:wiremock:2.23.2'
+ implementation 'javax:javaee-api:8.0'
  
- testCompile 'junit:junit:4.12'
- testCompile 'org.assertj:assertj-core:3.12.2'
- testCompile 'io.rest-assured:rest-assured:4.0.0'
+ testImplementation 'junit:junit:4.12'
+ testImplementation 'org.assertj:assertj-core:3.12.2'
+ testImplementation 'io.rest-assured:rest-assured:4.0.0'
 }

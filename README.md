@@ -1,7 +1,5 @@
 # Wiremock JAX-RS
-[![Build Status](https://travis-ci.org/tomasbjerre/wiremock-jaxrs.svg?branch=master)](https://travis-ci.org/tomasbjerre/wiremock-jaxrs)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/se.bjurr.wiremock/wiremock-jaxrs/badge.svg)](https://maven-badges.herokuapp.com/maven-central/se.bjurr.wiremock/wiremock-jaxrs)
-[![Bintray](https://api.bintray.com/packages/tomasbjerre/tomasbjerre/se.bjurr.wiremock%3Awiremock-jaxrs/images/download.svg) ](https://bintray.com/tomasbjerre/tomasbjerre/se.bjurr.wiremock%3Awiremock-jaxrs/_latestVersion)
 
 [Wiremock](http://wiremock.org/) with JAX-RS support. Enables creation of stubs from JAX-RS annotated resources. It:
 
