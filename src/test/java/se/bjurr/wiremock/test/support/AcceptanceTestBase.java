@@ -22,6 +22,7 @@ public class AcceptanceTestBase {
   public static void setupServer() throws Exception {
     setupServerWithEmptyFileRoot();
     Locale.setDefault(Locale.ENGLISH);
+    System.setProperty("line.separator", "\n");
   }
 
   @AfterClass

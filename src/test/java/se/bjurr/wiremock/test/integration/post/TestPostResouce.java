@@ -19,4 +19,9 @@ public interface TestPostResouce {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   public void createStringWithoutResponse(StringDTO dto);
+
+  @Path("/createXmlStringWithoutResponse")
+  @POST
+  @Consumes(MediaType.APPLICATION_XML)
+  public void createXmlStringWithoutResponse(StringDTO dto);
 }
