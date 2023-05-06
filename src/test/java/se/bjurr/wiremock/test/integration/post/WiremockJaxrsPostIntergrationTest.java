@@ -111,6 +111,33 @@ public class WiremockJaxrsPostIntergrationTest extends AcceptanceTestBase {
             "", // Resp type
             "application/json" // Req type
           }, //
+          { //
+            VOID_RESPONSE, //
+            stringDtoCreate,
+            ri((r) -> r.createXmlStringWithoutResponse(stringDtoCreate)), //
+            Arrays.asList("/createXmlStringWithoutResponse"), //
+            "{\n"
+                + "  \"id\" : \"d68fb4e2-48ed-40d2-bc73-0a18f54f3ece\",\n"
+                + "  \"request\" : {\n"
+                + "    \"urlPattern\" : \".*/createXmlStringWithoutResponse$\",\n"
+                + "    \"method\" : \"POST\",\n"
+                + "    \"headers\" : {\n"
+                + "      \"Content-Type\" : {\n"
+                + "        \"equalTo\" : \"application/xml\"\n"
+                + "      }\n"
+                + "    },\n"
+                + "    \"bodyPatterns\" : [ {\n"
+                + "      \"equalToXml\" : \"<StringDTO>\\n  <str>create</str>\\n</StringDTO>\\n\"\n"
+                + "    } ]\n"
+                + "  },\n"
+                + "  \"response\" : {\n"
+                + "    \"status\" : 202\n"
+                + "  },\n"
+                + "  \"uuid\" : \"d68fb4e2-48ed-40d2-bc73-0a18f54f3ece\"\n"
+                + "}",
+            "", // Resp type
+            "application/xml" // Req type
+          }, //
         } //
         );
   }
