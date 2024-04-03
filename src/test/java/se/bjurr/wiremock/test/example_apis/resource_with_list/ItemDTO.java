@@ -1,4 +1,4 @@
-package se.bjurr.wiremock.test.example_apis.resource_with_dto;
+package se.bjurr.wiremock.test.example_apis.resource_with_list;
 
 public class ItemDTO {
   private final String str;
@@ -8,15 +8,16 @@ public class ItemDTO {
     this.str = str;
   }
 
-  public void setId(final int id) {
+  public ItemDTO setId(final int id) {
     this.id = id;
+    return this;
   }
 
   public int getId() {
-    return id;
+    return this.id;
   }
 
   public String getStr() {
-    return str;
+    return this.str;
   }
 }

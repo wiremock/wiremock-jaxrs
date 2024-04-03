@@ -7,7 +7,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/")
-public interface TestPostResouce {
+public interface PostResouce {
 
   @Path("/createStringWithResponse")
   @POST

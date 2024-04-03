@@ -8,7 +8,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/")
-public interface TestGetResouce {
+public interface GetResouce {
 
   @Path("/getWithResponseObject")
   @GET

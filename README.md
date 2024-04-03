@@ -1,36 +1,41 @@
 # Wiremock JAX-RS
+
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/se.bjurr.wiremock/wiremock-jaxrs/badge.svg)](https://maven-badges.herokuapp.com/maven-central/se.bjurr.wiremock/wiremock-jaxrs)
 
 [Wiremock](http://wiremock.org/) with JAX-RS support. Enables creation of stubs from JAX-RS annotated resources. It:
 
- * Automates configuration of [stubs](http://wiremock.org/docs/stubbing/) for those using JAX-RS.
- * Contains validation checks against JAX-RS which enables you to produce **type safe stubs**.
+* Automates configuration of [stubs](http://wiremock.org/docs/stubbing/) for those using JAX-RS.
+* Contains validation checks against JAX-RS which enables you to produce **type safe stubs**.
 
 Given:
 
- * JAX-RS annotated resource
- * Called method
- * Response (unless void)
+* JAX-RS annotated resource
+* Called method
+* Response (unless void)
 
 It will create a [Wiremock stub](http://wiremock.org/docs/stubbing/) by gathering information from the JAX-RS annotations on the given resource.
 
 ## Usage
 
 It extends, and works just like, [Wiremock](http://wiremock.org/docs/stubbing/) by adding a new factory method:
+
 ```java
 WiremockJaxrs.invocation(Class<T> resource, ResourceInvocation<T> invocation)
 ```
 
 That is used like:
+
 ```java
-import static com.github.tomakehurst.wiremock.client.WireMockJaxrs.invocation;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.jaxrs.api.WireMockJaxrs.invocation;
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 ...
-invocation(ItemResouce.class, (r) -> r.whateverMethod(anyParameterValue))
+final StubMapping sm =
+    stubFor( //
+        invocation(ItemResouce.class, (r) -> r.whateverMethod(anyParameterValue)) //
+            .willReturn(aResponse().withStatus(SC_ACCEPTED), responseObject));
 ```
-
-See also:
-
- https://github.com/tomasbjerre/wiremock-jaxrs-example
 
 ### Example
 
@@ -39,7 +44,7 @@ When invoked like this:
 ```java
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMockJaxrs.invocation;
+import static com.github.tomakehurst.wiremock.jaxrs.api.WireMockJaxrs.invocation;
 ...
 final List<ItemDTO> responseObject = Arrays.asList(new ItemDTO("pong"));
 final StubMapping sm =
@@ -93,10 +98,11 @@ public interface ItemResouce {
 ```
 
 If the method consumes content, that content is also matched. When invoked like this:
+
 ```java
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMockJaxrs.invocation;
+import static com.github.tomakehurst.wiremock.jaxrs.api.WireMockJaxrs.invocation;
 ...
 final ItemDTO responseObject = new ItemDTO("the item");
 responseObject.setId(123);

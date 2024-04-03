@@ -1,4 +1,4 @@
-package se.bjurr.wiremock.test.example_apis.resource_with_dto;
+package se.bjurr.wiremock.test.example_apis.resource_with_list;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/")
-public interface ItemResouce {
+public interface ListResouce {
 
   @Path("/list")
   @GET
