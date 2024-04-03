@@ -1,17 +1,17 @@
 package com.github.tomakehurst.wiremock.client;
 
 import com.github.tomakehurst.wiremock.http.RequestMethod;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HEAD;
+import jakarta.ws.rs.OPTIONS;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
-import javax.ws.rs.OPTIONS;
-import javax.ws.rs.PATCH;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import org.junit.Test;
 
 public class RequestMethodsTest {
@@ -45,7 +45,7 @@ public class RequestMethodsTest {
         Arrays.asList(RequestMethod.values()).stream()
             .map((it) -> it.getName())
             .collect(Collectors.toList());
-    reqMethodsNotFound.removeAll(Arrays.asList("TRACE", "ANY"));
+    reqMethodsNotFound.removeAll(Arrays.asList("TRACE", "ANY", "GET_OR_HEAD"));
     final JaxrsInvocationHandler sut = new JaxrsInvocationHandler();
     for (final Method method : AllRequestMethodsResouce.class.getMethods()) {
       final String foundReqMethod = sut.getRequestMethod(method).getName();

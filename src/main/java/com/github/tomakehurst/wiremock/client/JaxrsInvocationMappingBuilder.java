@@ -4,8 +4,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.github.tomakehurst.wiremock.matching.*;
-import javax.ws.rs.core.HttpHeaders;
+import com.github.tomakehurst.wiremock.matching.ContentPattern;
+import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
+import com.github.tomakehurst.wiremock.matching.EqualToPattern;
+import com.github.tomakehurst.wiremock.matching.EqualToXmlPattern;
+import com.github.tomakehurst.wiremock.matching.RegexPattern;
+import com.github.tomakehurst.wiremock.matching.StringValuePattern;
+import com.github.tomakehurst.wiremock.matching.UrlPattern;
+import jakarta.ws.rs.core.HttpHeaders;
 
 public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
 
@@ -15,7 +21,7 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
     super(handler.getRequestMethod(), new UrlPattern(new RegexPattern(get(handler)), true));
     this.handler = handler;
 
-    String requestBodyContentType = getRequestBodyContentType(handler);
+    final String requestBodyContentType = this.getRequestBodyContentType(handler);
     if (requestBodyContentType != null) {
       this.withHeader(HttpHeaders.CONTENT_TYPE, new EqualToPattern(requestBodyContentType));
     }
@@ -25,7 +31,8 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
           HttpHeaders.ACCEPT, new EqualToPattern(handler.getResponseContentTypeList().get(0)));
     }
 
-    ContentPattern<String> requestBodyContentPattern = createRequestBodyContentPattern(handler);
+    final ContentPattern<String> requestBodyContentPattern =
+        this.createRequestBodyContentPattern(handler);
     if (requestBodyContentPattern != null) {
       this.withRequestBody(requestBodyContentPattern);
     }
@@ -35,18 +42,19 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
       if (value == null) {
         continue;
       }
-      final StringValuePattern valuePattern = getStringValuePattern(value);
+      final StringValuePattern valuePattern = this.getStringValuePattern(value);
       this.withQueryParam(qp.getName(), valuePattern);
     }
   }
 
-  private ContentPattern<String> createRequestBodyContentPattern(JaxrsInvocationHandler handler) {
+  private ContentPattern<String> createRequestBodyContentPattern(
+      final JaxrsInvocationHandler handler) {
     if (!handler.findPostObject().isPresent()) {
       return null;
     }
 
-    Object requestBody = handler.findPostObject().get();
-    String requestBodyContentType = getRequestBodyContentType(handler);
+    final Object requestBody = handler.findPostObject().get();
+    final String requestBodyContentType = this.getRequestBodyContentType(handler);
     if (requestBodyContentType == null) {
       if (!(requestBody instanceof String)) {
         throw new IllegalArgumentException(
@@ -77,7 +85,7 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
     }
   }
 
-  private String getRequestBodyContentType(JaxrsInvocationHandler handler) {
+  private String getRequestBodyContentType(final JaxrsInvocationHandler handler) {
     if (handler.getRequestContentTypeList().isEmpty()) {
       return null;
     }
@@ -91,7 +99,7 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
 
   public BasicMappingBuilder willReturn(
       final ResponseDefinitionBuilder responseDefBuilder, final Object responseObject) {
-    final Class<?> expectedReturnType = handler.getReturnType();
+    final Class<?> expectedReturnType = this.handler.getReturnType();
     if (responseDefBuilder.status >= 200 && responseDefBuilder.status <= 299) {
       if (!expectedReturnType.isAssignableFrom(responseObject.getClass())) {
         throw new RuntimeException(
@@ -101,14 +109,14 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
 
     responseDefBuilder.withBody(toJson(responseObject));
 
-    decorateOnWillReturn(responseDefBuilder);
+    this.decorateOnWillReturn(responseDefBuilder);
 
     return super.willReturn(responseDefBuilder);
   }
 
   @Override
   public BasicMappingBuilder willReturn(final ResponseDefinitionBuilder responseDefBuilder) {
-    final Class<?> expectedReturnType = handler.getReturnType();
+    final Class<?> expectedReturnType = this.handler.getReturnType();
     if (responseDefBuilder.status >= 200 && responseDefBuilder.status <= 299) {
       if (!expectedReturnType.getName().equals("void")) {
         throw new RuntimeException(
@@ -118,31 +126,29 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
       }
     }
 
-    decorateOnWillReturn(responseDefBuilder);
+    this.decorateOnWillReturn(responseDefBuilder);
 
     return super.willReturn(responseDefBuilder);
   }
 
   private void decorateOnWillReturn(final ResponseDefinitionBuilder responseDefBuilder) {
-    if (!handler.getResponseContentTypeList().isEmpty()) {
+    if (!this.handler.getResponseContentTypeList().isEmpty()) {
       responseDefBuilder.withHeader(
-          HttpHeaders.CONTENT_TYPE, handler.getResponseContentTypeList().get(0));
+          HttpHeaders.CONTENT_TYPE, this.handler.getResponseContentTypeList().get(0));
     }
   }
 
   private StringValuePattern getStringValuePattern(final Object value) {
-    StringValuePattern valuePattern = null;
     final Boolean ignoreArrayOrder = true;
     final Boolean ignoreExtraElements = true;
     if (value.getClass() != Object.class
         && (value.getClass().isPrimitive()
             || value.getClass().getName().startsWith("java.lang."))) {
-      valuePattern = new EqualToPattern(value.toString());
+      return new EqualToPattern(value.toString());
     } else {
       final String json = toJson(value);
-      valuePattern = new EqualToJsonPattern(json, ignoreArrayOrder, ignoreExtraElements);
+      return new EqualToJsonPattern(json, ignoreArrayOrder, ignoreExtraElements);
     }
-    return valuePattern;
   }
 
   private static String toJson(final Object object) {
@@ -153,7 +159,8 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
     return serializeWithObjectMapper(object, new XmlMapper());
   }
 
-  private static String serializeWithObjectMapper(Object object, ObjectMapper objectMapper) {
+  private static String serializeWithObjectMapper(
+      final Object object, final ObjectMapper objectMapper) {
     try {
       if (object instanceof String) {
         return (String) object;

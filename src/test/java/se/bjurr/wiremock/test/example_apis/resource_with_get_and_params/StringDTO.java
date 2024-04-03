@@ -1,4 +1,4 @@
-package se.bjurr.wiremock.test.integration.get;
+package se.bjurr.wiremock.test.example_apis.resource_with_get_and_params;
 
 public class StringDTO {
   private final String str;

@@ -1,6 +1,6 @@
-package se.bjurr.wiremock.test.integration.post;
+package se.bjurr.wiremock.test.example_apis.resource_with_post_and_params;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "StringDTO")
 public class StringDTO {
@@ -20,14 +20,14 @@ public class StringDTO {
   }
 
   public Integer getId() {
-    return id;
+    return this.id;
   }
 
-  public void setStr(String str) {
+  public void setStr(final String str) {
     this.str = str;
   }
 
   public String getStr() {
-    return str;
+    return this.str;
   }
 }

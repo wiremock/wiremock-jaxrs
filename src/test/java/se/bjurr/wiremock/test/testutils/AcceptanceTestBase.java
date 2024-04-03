@@ -1,4 +1,4 @@
-package se.bjurr.wiremock.test.support;
+package se.bjurr.wiremock.test.testutils;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static io.restassured.config.EncoderConfig.encoderConfig;
@@ -6,10 +6,12 @@ import static io.restassured.config.EncoderConfig.encoderConfig;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import io.restassured.RestAssured;
 import io.restassured.config.EncoderConfig;
 import java.io.File;
 import java.util.Locale;
+import java.util.UUID;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -53,5 +55,11 @@ public class AcceptanceTestBase {
     final EncoderConfig encoderConfig =
         encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false);
     RestAssured.config = RestAssured.config().encoderConfig(encoderConfig);
+  }
+
+  public StubMapping setStaticUUIDs(final StubMapping sm) {
+    sm.setUuid(UUID.fromString("d68fb4e2-48ed-40d2-bc73-0a18f54f3ece"));
+    sm.setId(UUID.fromString("d68fb4e2-48ed-40d2-bc73-0a18f54f3ece"));
+    return sm;
   }
 }

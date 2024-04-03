@@ -1,6 +1,18 @@
 package com.github.tomakehurst.wiremock.client;
 
 import com.github.tomakehurst.wiremock.http.RequestMethod;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HEAD;
+import jakarta.ws.rs.OPTIONS;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -8,18 +20,6 @@ import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
-import javax.ws.rs.OPTIONS;
-import javax.ws.rs.PATCH;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 
 class JaxrsInvocationHandler implements InvocationHandler {
 
@@ -27,7 +27,6 @@ class JaxrsInvocationHandler implements InvocationHandler {
   private Class<?> returnType;
   private String path;
   private List<InvocationParam> queryParams;
-  private List<InvocationParam> pathParams;
   private List<String> requestContentTypeList;
   private List<String> responseContentTypeList;
   private Object postObject;
@@ -35,60 +34,60 @@ class JaxrsInvocationHandler implements InvocationHandler {
   @Override
   public Object invoke(final Object proxy, final Method method, final Object[] args)
       throws Throwable {
-    this.requestMethod = getRequestMethod(method);
+    this.requestMethod = this.getRequestMethod(method);
 
     this.returnType = method.getReturnType();
-    this.queryParams = createQueryParams(method.getParameters(), args);
-    this.pathParams = createPathParams(method.getParameters(), args);
-    this.path = substituteParams(createPath(method), queryParams, pathParams);
-    this.requestContentTypeList = getRequestContentTypeList(method);
-    this.responseContentTypeList = getResponseContentTypeList(method);
-    this.postObject = findPostObject(method.getParameters(), args).orElse(null);
+    this.queryParams = this.createQueryParams(method.getParameters(), args);
+    final List<InvocationParam> pathParams = this.createPathParams(method.getParameters(), args);
+    this.path = this.substituteParams(this.createPath(method), pathParams);
+    this.requestContentTypeList = this.getRequestContentTypeList(method);
+    this.responseContentTypeList = this.getResponseContentTypeList(method);
+    this.postObject = this.findPostObject(method.getParameters(), args).orElse(null);
     return null;
   }
 
   public RequestMethod getRequestMethod() {
-    return requestMethod;
+    return this.requestMethod;
   }
 
   public String getPath() {
-    return path;
+    return this.path;
   }
 
   public List<String> getRequestContentTypeList() {
-    return requestContentTypeList;
+    return this.requestContentTypeList;
   }
 
   public List<String> getResponseContentTypeList() {
-    return responseContentTypeList;
+    return this.responseContentTypeList;
   }
 
   public Class<?> getReturnType() {
-    return returnType;
+    return this.returnType;
   }
 
   public List<InvocationParam> getQueryParams() {
-    return queryParams;
+    return this.queryParams;
   }
 
   public Optional<Object> findPostObject() {
-    return Optional.ofNullable(postObject);
+    return Optional.ofNullable(this.postObject);
   }
 
   RequestMethod getRequestMethod(final Method method) {
-    if (findAnnotation(method, GET.class).isPresent()) {
+    if (this.findAnnotation(method, GET.class).isPresent()) {
       return RequestMethod.GET;
-    } else if (findAnnotation(method, POST.class).isPresent()) {
+    } else if (this.findAnnotation(method, POST.class).isPresent()) {
       return RequestMethod.POST;
-    } else if (findAnnotation(method, PUT.class).isPresent()) {
+    } else if (this.findAnnotation(method, PUT.class).isPresent()) {
       return RequestMethod.PUT;
-    } else if (findAnnotation(method, DELETE.class).isPresent()) {
+    } else if (this.findAnnotation(method, DELETE.class).isPresent()) {
       return RequestMethod.DELETE;
-    } else if (findAnnotation(method, PATCH.class).isPresent()) {
+    } else if (this.findAnnotation(method, PATCH.class).isPresent()) {
       return RequestMethod.PATCH;
-    } else if (findAnnotation(method, HEAD.class).isPresent()) {
+    } else if (this.findAnnotation(method, HEAD.class).isPresent()) {
       return RequestMethod.HEAD;
-    } else if (findAnnotation(method, OPTIONS.class).isPresent()) {
+    } else if (this.findAnnotation(method, OPTIONS.class).isPresent()) {
       return RequestMethod.OPTIONS;
     }
     throw new RuntimeException("Cannot find request method of " + method.getName());
@@ -116,8 +115,8 @@ class JaxrsInvocationHandler implements InvocationHandler {
 
   private String createPath(final Method method) {
     final Optional<Path> classPath =
-        findAnnotation(method.getDeclaringClass().getAnnotations(), Path.class);
-    final Optional<Path> methodPath = findAnnotation(method, Path.class);
+        this.findAnnotation(method.getDeclaringClass().getAnnotations(), Path.class);
+    final Optional<Path> methodPath = this.findAnnotation(method, Path.class);
     String str = "";
     if (classPath.isPresent()) {
       str += classPath.get().value();
@@ -133,7 +132,7 @@ class JaxrsInvocationHandler implements InvocationHandler {
 
   private <T> Optional<T> findAnnotation(final Method method, final Class<T> findAnnotation) {
     final Annotation[] methodAnnotations = method.getAnnotations();
-    return findAnnotation(methodAnnotations, findAnnotation);
+    return this.findAnnotation(methodAnnotations, findAnnotation);
   }
 
   @SuppressWarnings("unchecked")
@@ -148,7 +147,7 @@ class JaxrsInvocationHandler implements InvocationHandler {
   }
 
   private List<InvocationParam> createQueryParams(
-      final Parameter[] parameters, final Object[] args) {
+      final Parameter[] parameters, final Object... args) {
     final List<InvocationParam> queryParams = new ArrayList<>();
     if (parameters == null || args == null) {
       return queryParams;
@@ -160,7 +159,7 @@ class JaxrsInvocationHandler implements InvocationHandler {
       final Object arg = args[i];
       final Parameter param = parameters[i];
       final Optional<QueryParam> paramAnnotation =
-          findAnnotation(param.getAnnotations(), QueryParam.class);
+          this.findAnnotation(param.getAnnotations(), QueryParam.class);
       if (paramAnnotation.isPresent()) {
         final String name = paramAnnotation.get().value();
         final InvocationParam invocationParam = new InvocationParam(name, arg);
@@ -170,7 +169,7 @@ class JaxrsInvocationHandler implements InvocationHandler {
     return queryParams;
   }
 
-  private Optional<Object> findPostObject(final Parameter[] parameters, final Object[] args) {
+  private Optional<Object> findPostObject(final Parameter[] parameters, final Object... args) {
     if (parameters == null || args == null) {
       return Optional.empty();
     }
@@ -181,8 +180,8 @@ class JaxrsInvocationHandler implements InvocationHandler {
       final Object arg = args[i];
       final Parameter param = parameters[i];
       if ( //
-      !findAnnotation(param.getAnnotations(), PathParam.class).isPresent() //
-          && !findAnnotation(param.getAnnotations(), QueryParam.class).isPresent()) {
+      !this.findAnnotation(param.getAnnotations(), PathParam.class).isPresent() //
+          && !this.findAnnotation(param.getAnnotations(), QueryParam.class).isPresent()) {
         return Optional.ofNullable(arg);
       }
     }
@@ -190,7 +189,7 @@ class JaxrsInvocationHandler implements InvocationHandler {
   }
 
   private List<InvocationParam> createPathParams(
-      final Parameter[] parameters, final Object[] args) {
+      final Parameter[] parameters, final Object... args) {
     final List<InvocationParam> pathParams = new ArrayList<>();
     if (parameters == null || args == null) {
       return pathParams;
@@ -202,7 +201,7 @@ class JaxrsInvocationHandler implements InvocationHandler {
       final Object arg = args[i];
       final Parameter param = parameters[i];
       final Optional<PathParam> paramAnnotation =
-          findAnnotation(param.getAnnotations(), PathParam.class);
+          this.findAnnotation(param.getAnnotations(), PathParam.class);
       if (paramAnnotation.isPresent()) {
         final String name = paramAnnotation.get().value();
         final InvocationParam invocationParam = new InvocationParam(name, arg);
@@ -212,10 +211,7 @@ class JaxrsInvocationHandler implements InvocationHandler {
     return pathParams;
   }
 
-  private String substituteParams(
-      final String createPath,
-      final List<InvocationParam> queryParams,
-      final List<InvocationParam> pathParams) {
+  private String substituteParams(final String createPath, final List<InvocationParam> pathParams) {
     String substituted = createPath;
     for (final InvocationParam pathParam : pathParams) {
       if (pathParam.getValue() == null) {

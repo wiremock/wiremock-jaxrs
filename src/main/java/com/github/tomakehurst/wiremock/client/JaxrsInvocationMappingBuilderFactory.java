@@ -8,9 +8,10 @@ public class JaxrsInvocationMappingBuilderFactory {
       final Class<T> resource, final ResourceInvocation<T> invocation) {
     final JaxrsInvocationHandler handler = new JaxrsInvocationHandler();
 
+    final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
     @SuppressWarnings("unchecked")
     final T recordingProxy =
-        (T) Proxy.newProxyInstance(resource.getClassLoader(), new Class[] {resource}, handler);
+        (T) Proxy.newProxyInstance(contextClassLoader, new Class[] {resource}, handler);
 
     invocation.invoke(recordingProxy);
 
