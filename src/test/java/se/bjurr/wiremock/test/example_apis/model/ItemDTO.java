@@ -1,4 +1,4 @@
-package se.bjurr.wiremock.test.example_apis.resource_with_list;
+package se.bjurr.wiremock.test.example_apis.model;
 
 public class ItemDTO {
   private final String str;

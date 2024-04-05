@@ -5,8 +5,8 @@ import static jakarta.servlet.http.HttpServletResponse.SC_ACCEPTED;
 import static se.bjurr.wiremock.test.testutils.InvocationAssertion.assertThatApi;
 
 import org.junit.Test;
-import se.bjurr.wiremock.test.example_apis.resource_with_post_and_params.PostResouce;
-import se.bjurr.wiremock.test.example_apis.resource_with_post_and_params.StringDTO;
+import se.bjurr.wiremock.test.example_apis.PostResouce;
+import se.bjurr.wiremock.test.example_apis.model.StringDTO;
 import se.bjurr.wiremock.test.testutils.AcceptanceTestBase;
 
 public class PostIntergrationTest extends AcceptanceTestBase {
@@ -16,7 +16,7 @@ public class PostIntergrationTest extends AcceptanceTestBase {
 
     assertThatApi(PostResouce.class)
         .isInvokedLike((r) -> r.createStringWithResponse(stringDtoCreate))
-        .andRespondingWith(new StringDTO("pong"))
+        .andWillReturn(new StringDTO("pong"))
         .shouldTranslateToMapping(
             """
 			{

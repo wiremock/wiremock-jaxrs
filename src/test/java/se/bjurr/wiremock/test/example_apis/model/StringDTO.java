@@ -1,4 +1,4 @@
-package se.bjurr.wiremock.test.example_apis.resource_with_post_and_params;
+package se.bjurr.wiremock.test.example_apis.model;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 

@@ -7,6 +7,13 @@ import com.github.tomakehurst.wiremock.client.ResourceInvocation;
 public class WireMockJaxrs {
   public static <T> JaxrsInvocationMappingBuilder invocation(
       final Class<T> resource, final ResourceInvocation<T> invocation) {
-    return JaxrsInvocationMappingBuilderFactory.create(resource, invocation);
+    return WireMockJaxrs.invocation(resource, invocation, MediaTypes.withMediaTypes());
+  }
+
+  public static <T> JaxrsInvocationMappingBuilder invocation(
+      final Class<T> resource,
+      final ResourceInvocation<T> invocation,
+      final MediaTypes mediaTypes) {
+    return JaxrsInvocationMappingBuilderFactory.create(resource, invocation, mediaTypes);
   }
 }

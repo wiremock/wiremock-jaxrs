@@ -10,8 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import org.junit.Test;
-import se.bjurr.wiremock.test.example_apis.resource_with_list.ItemDTO;
-import se.bjurr.wiremock.test.example_apis.resource_with_list.ListResouce;
+import se.bjurr.wiremock.test.example_apis.ListResouce;
+import se.bjurr.wiremock.test.example_apis.model.ItemDTO;
 import se.bjurr.wiremock.test.testutils.AcceptanceTestBase;
 
 public class UsageExamplesTest extends AcceptanceTestBase {

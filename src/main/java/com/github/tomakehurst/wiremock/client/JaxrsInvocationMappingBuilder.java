@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.github.tomakehurst.wiremock.jaxrs.api.MediaTypes;
 import com.github.tomakehurst.wiremock.matching.ContentPattern;
 import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
@@ -12,29 +13,36 @@ import com.github.tomakehurst.wiremock.matching.RegexPattern;
 import com.github.tomakehurst.wiremock.matching.StringValuePattern;
 import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
 
   private final JaxrsInvocationHandler handler;
+  private final MediaTypes mediaTypes;
 
-  public JaxrsInvocationMappingBuilder(final JaxrsInvocationHandler handler) {
+  public JaxrsInvocationMappingBuilder(
+      final JaxrsInvocationHandler handler, final MediaTypes mediaTypes) {
     super(handler.getRequestMethod(), new UrlPattern(new RegexPattern(get(handler)), true));
     this.handler = handler;
-
-    final String requestBodyContentType = this.getRequestBodyContentType(handler);
+    this.mediaTypes = mediaTypes;
+    final String requestBodyContentType =
+        this.getContentType(handler.getRequestContentTypeList(), mediaTypes.getConsumes());
     if (requestBodyContentType != null) {
       this.withHeader(HttpHeaders.CONTENT_TYPE, new EqualToPattern(requestBodyContentType));
     }
 
-    if (!handler.getResponseContentTypeList().isEmpty()) {
-      this.withHeader(
-          HttpHeaders.ACCEPT, new EqualToPattern(handler.getResponseContentTypeList().get(0)));
+    final ContentPattern<String> requestBodyContent =
+        this.createRequestBodyContentPattern(handler, mediaTypes.getConsumes());
+    if (requestBodyContent != null) {
+      this.withRequestBody(requestBodyContent);
     }
 
-    final ContentPattern<String> requestBodyContentPattern =
-        this.createRequestBodyContentPattern(handler);
-    if (requestBodyContentPattern != null) {
-      this.withRequestBody(requestBodyContentPattern);
+    final String responseBodyContentType =
+        this.getContentType(handler.getResponseContentTypeList(), mediaTypes.getProduces());
+    if (responseBodyContentType != null) {
+      this.withHeader(HttpHeaders.ACCEPT, new EqualToPattern(responseBodyContentType));
     }
 
     for (final InvocationParam qp : handler.getQueryParams()) {
@@ -48,34 +56,35 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
   }
 
   private ContentPattern<String> createRequestBodyContentPattern(
-      final JaxrsInvocationHandler handler) {
+      final JaxrsInvocationHandler handler, final String mediaType) {
     if (!handler.findPostObject().isPresent()) {
       return null;
     }
 
-    final Object requestBody = handler.findPostObject().get();
-    final String requestBodyContentType = this.getRequestBodyContentType(handler);
+    final Object body = handler.findPostObject().get();
+    final String requestBodyContentType =
+        this.getContentType(handler.getRequestContentTypeList(), mediaType);
     if (requestBodyContentType == null) {
-      if (!(requestBody instanceof String)) {
+      if (!(body instanceof String)) {
         throw new IllegalArgumentException(
             "Cannot serialize request body as Content-Type is not defined");
       }
 
-      return new EqualToPattern((String) requestBody);
+      return new EqualToPattern((String) body);
     }
 
     switch (requestBodyContentType) {
-      case "application/json":
+      case MediaType.APPLICATION_JSON:
         {
           final Boolean ignoreArrayOrder = true;
           final Boolean ignoreExtraElements = true;
-          final String json = toJson(requestBody);
+          final String json = toJson(body);
 
           return new EqualToJsonPattern(json, ignoreArrayOrder, ignoreExtraElements);
         }
-      case "application/xml":
+      case MediaType.APPLICATION_XML:
         {
-          final String xml = toXml(requestBody);
+          final String xml = toXml(body);
 
           return new EqualToXmlPattern(xml);
         }
@@ -85,12 +94,36 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
     }
   }
 
-  private String getRequestBodyContentType(final JaxrsInvocationHandler handler) {
-    if (handler.getRequestContentTypeList().isEmpty()) {
-      return null;
+  private String getContentType(final List<String> mediaTypesOnApi, final String mediaType) {
+    if (mediaType == null) {
+      if (mediaTypesOnApi.isEmpty()) {
+        return null;
+      }
+
+      if (mediaTypesOnApi.size() == 1) {
+        return mediaTypesOnApi.get(0);
+      }
     }
 
-    return handler.getRequestContentTypeList().get(0);
+    if (mediaType != null) {
+      for (final String candidate : mediaTypesOnApi) {
+        if (candidate.equalsIgnoreCase(mediaType)) {
+          return candidate;
+        }
+      }
+    }
+
+    if (mediaType == null) {
+      throw new RuntimeException(
+          "Was unable to determine media type. You need to explicitly set media type when there are several types in the API: "
+              + mediaTypesOnApi.stream().collect(Collectors.joining(",")));
+    } else {
+      throw new RuntimeException(
+          "Was unable to determine media type. Tried to mock "
+              + mediaType
+              + " but API has "
+              + mediaTypesOnApi.stream().collect(Collectors.joining(",")));
+    }
   }
 
   private static String get(final JaxrsInvocationHandler handler) {
@@ -107,7 +140,27 @@ public class JaxrsInvocationMappingBuilder extends BasicMappingBuilder {
       }
     }
 
-    responseDefBuilder.withBody(toJson(responseObject));
+    final String responseBodyContentType =
+        this.getContentType(
+            this.handler.getResponseContentTypeList(), this.mediaTypes.getProduces());
+    String body = null;
+    switch (responseBodyContentType) {
+      case MediaType.APPLICATION_JSON:
+        {
+          body = toJson(responseObject);
+          break;
+        }
+      case MediaType.APPLICATION_XML:
+        {
+          body = toXml(responseObject);
+          break;
+        }
+      default:
+        throw new IllegalArgumentException(
+            "Content-Type " + this.mediaTypes.getProduces() + " is not supported");
+    }
+
+    responseDefBuilder.withBody(body);
 
     this.decorateOnWillReturn(responseDefBuilder);
 

@@ -1,14 +1,14 @@
-package se.bjurr.wiremock.test.example_apis.resource_with_consumes_and_produces;
+package se.bjurr.wiremock.test.example_apis.model;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "StringDTO")
-public class StringDTO {
+@XmlRootElement(name = "CommonDTO")
+public class CommonDTO {
   private String str;
 
-  public StringDTO() {}
+  public CommonDTO() {}
 
-  public StringDTO(final String str) {
+  public CommonDTO(final String str) {
     this.str = str;
   }
 

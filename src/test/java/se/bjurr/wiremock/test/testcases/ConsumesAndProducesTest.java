@@ -3,12 +3,12 @@ package se.bjurr.wiremock.test.testcases;
 import static se.bjurr.wiremock.test.testutils.InvocationAssertion.assertThatApi;
 
 import org.junit.Test;
-import se.bjurr.wiremock.test.example_apis.resource_common.CommonDTO;
-import se.bjurr.wiremock.test.example_apis.resource_with_consumes_and_produces.ConsumesAndProduces;
-import se.bjurr.wiremock.test.example_apis.resource_with_consumes_and_produces.StringDTO;
+import se.bjurr.wiremock.test.example_apis.ConsumesAndProduces;
+import se.bjurr.wiremock.test.example_apis.model.CommonDTO;
+import se.bjurr.wiremock.test.example_apis.model.StringDTO;
 import se.bjurr.wiremock.test.testutils.AcceptanceTestBase;
 
-public class ConsumesAndProducesIntergrationTest extends AcceptanceTestBase {
+public class ConsumesAndProducesTest extends AcceptanceTestBase {
   @Test
   public void consumesAndProducesNothing() {
     assertThatApi(ConsumesAndProduces.class)
@@ -30,10 +30,10 @@ public class ConsumesAndProducesIntergrationTest extends AcceptanceTestBase {
 
     assertThatApi(ConsumesAndProduces.class)
         .isInvokedLike((r) -> r.consumesAndProducesNothing())
-        .andRespondingWith(new CommonDTO("pong"))
+        .andWillReturn(new CommonDTO("pong"))
         .shouldThrow(
             """
-			Cannot assign void from class se.bjurr.wiremock.test.example_apis.resource_common.CommonDTO
+			Cannot assign void from class se.bjurr.wiremock.test.example_apis.model.CommonDTO
 			""");
   }
 
@@ -41,7 +41,7 @@ public class ConsumesAndProducesIntergrationTest extends AcceptanceTestBase {
   public void consumesAndProducesXml() {
     assertThatApi(ConsumesAndProduces.class)
         .isInvokedLike((r) -> r.consumesXmlAndProducesJson(new StringDTO("s")))
-        .andRespondingWith(new StringDTO("pong"))
+        .andWillReturn(new StringDTO("pong"))
         .shouldTranslateToMapping(
             """
 {
@@ -74,10 +74,10 @@ public class ConsumesAndProducesIntergrationTest extends AcceptanceTestBase {
 
     assertThatApi(ConsumesAndProduces.class)
         .isInvokedLike((r) -> r.consumesXmlAndProducesJson(new StringDTO("s")))
-        .andRespondingWith(new CommonDTO("pong"))
+        .andWillReturn(new CommonDTO("pong"))
         .shouldThrow(
             """
-    			Cannot assign class se.bjurr.wiremock.test.example_apis.resource_with_consumes_and_produces.StringDTO from class se.bjurr.wiremock.test.example_apis.resource_common.CommonDTO
+    			Cannot assign class se.bjurr.wiremock.test.example_apis.model.StringDTO from class se.bjurr.wiremock.test.example_apis.model.CommonDTO
     			""");
   }
 
@@ -110,10 +110,10 @@ public class ConsumesAndProducesIntergrationTest extends AcceptanceTestBase {
 
     assertThatApi(ConsumesAndProduces.class)
         .isInvokedLike((r) -> r.consumesXml(new StringDTO("s")))
-        .andRespondingWith(new CommonDTO("pong"))
+        .andWillReturn(new CommonDTO("pong"))
         .shouldThrow(
             """
-    			Cannot assign void from class se.bjurr.wiremock.test.example_apis.resource_common.CommonDTO
+    			Cannot assign void from class se.bjurr.wiremock.test.example_apis.model.CommonDTO
     			""");
   }
 
@@ -121,7 +121,7 @@ public class ConsumesAndProducesIntergrationTest extends AcceptanceTestBase {
   public void producesXml() {
     assertThatApi(ConsumesAndProduces.class)
         .isInvokedLike((r) -> r.producesXml())
-        .andRespondingWith(new StringDTO("pong"))
+        .andWillReturn(new StringDTO("pong"))
         .shouldTranslateToMapping(
             """
 {
@@ -137,7 +137,7 @@ public class ConsumesAndProducesIntergrationTest extends AcceptanceTestBase {
   },
   "response" : {
     "status" : 202,
-    "body" : "{\\n  \\"str\\" : \\"pong\\"\\n}",
+    "body" : "<StringDTO>\\n  <str>pong</str>\\n</StringDTO>\\n",
     "headers" : {
       "Content-Type" : "application/xml"
     }
@@ -148,10 +148,10 @@ public class ConsumesAndProducesIntergrationTest extends AcceptanceTestBase {
 
     assertThatApi(ConsumesAndProduces.class)
         .isInvokedLike((r) -> r.producesXml())
-        .andRespondingWith(new CommonDTO("pong"))
+        .andWillReturn(new CommonDTO("pong"))
         .shouldThrow(
             """
-    			Cannot assign class se.bjurr.wiremock.test.example_apis.resource_with_consumes_and_produces.StringDTO from class se.bjurr.wiremock.test.example_apis.resource_common.CommonDTO
+    			Cannot assign class se.bjurr.wiremock.test.example_apis.model.StringDTO from class se.bjurr.wiremock.test.example_apis.model.CommonDTO
     			""");
   }
 }

@@ -8,15 +8,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 
 import com.github.tomakehurst.wiremock.client.ResourceInvocation;
+import com.github.tomakehurst.wiremock.jaxrs.api.MediaTypes;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import java.util.UUID;
 
 public class InvocationAssertion<T> {
   private Class<T> clazz;
   private ResourceInvocation<T> invocation;
+  private final MediaTypes mediaTypes;
   private Object responseObject;
 
-  private InvocationAssertion() {}
+  private InvocationAssertion() {
+    this.mediaTypes = MediaTypes.withMediaTypes();
+  }
 
   public static <T> InvocationAssertion<T> assertThatApi(final Class<T> clazz) {
     return new InvocationAssertion<T>().whenApi(clazz);
@@ -32,7 +36,17 @@ public class InvocationAssertion<T> {
     return this;
   }
 
-  public InvocationAssertion<T> andRespondingWith(final Object responseObject) {
+  public InvocationAssertion<T> withConsumingMediaType(final String mediaType) {
+    this.mediaTypes.consuming(mediaType);
+    return this;
+  }
+
+  public InvocationAssertion<T> withProducingMediaType(final String mediaType) {
+    this.mediaTypes.producing(mediaType);
+    return this;
+  }
+
+  public InvocationAssertion<T> andWillReturn(final Object responseObject) {
     this.responseObject = responseObject;
     return this;
   }
@@ -63,10 +77,18 @@ public class InvocationAssertion<T> {
       final ResourceInvocation<T> invocation,
       final Object responseObject,
       final String expectedJson) {
-    final StubMapping sm =
-        stubFor( //
-            invocation(clazz, invocation) //
-                .willReturn(aResponse().withStatus(SC_ACCEPTED), responseObject));
+    StubMapping sm = null;
+    if (this.mediaTypes == null) {
+      sm =
+          stubFor( //
+              invocation(clazz, invocation) //
+                  .willReturn(aResponse().withStatus(SC_ACCEPTED), responseObject));
+    } else {
+      sm =
+          stubFor( //
+              invocation(clazz, invocation, this.mediaTypes) //
+                  .willReturn(aResponse().withStatus(SC_ACCEPTED), responseObject));
+    }
 
     final String actual = StubMapping.buildJsonStringFor(this.setStaticUUIDs(sm));
 
@@ -76,10 +98,18 @@ public class InvocationAssertion<T> {
 
   private <T> void assertInvocationTranslatesToMappingJson(
       final Class<T> clazz, final ResourceInvocation<T> invocation, final String expected) {
-    final StubMapping sm =
-        stubFor( //
-            invocation(clazz, invocation) //
-                .willReturn(aResponse().withStatus(SC_ACCEPTED)));
+    StubMapping sm = null;
+    if (this.mediaTypes == null) {
+      sm =
+          stubFor( //
+              invocation(clazz, invocation) //
+                  .willReturn(aResponse().withStatus(SC_ACCEPTED)));
+    } else {
+      sm =
+          stubFor( //
+              invocation(clazz, invocation, this.mediaTypes) //
+                  .willReturn(aResponse().withStatus(SC_ACCEPTED)));
+    }
 
     final String actual = StubMapping.buildJsonStringFor(this.setStaticUUIDs(sm));
 
