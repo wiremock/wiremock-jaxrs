@@ -2,57 +2,58 @@ package se.bjurr.wiremock.test.testcases;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.jaxrs.api.MediaTypes.withMediaTypes;
 import static com.github.tomakehurst.wiremock.jaxrs.api.WireMockJaxrs.invocation;
 import static io.restassured.RestAssured.given;
 import static jakarta.servlet.http.HttpServletResponse.SC_ACCEPTED;
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
+import jakarta.ws.rs.core.MediaType;
 import org.junit.Test;
-import se.bjurr.wiremock.test.example_apis.ListResouce;
-import se.bjurr.wiremock.test.example_apis.model.ItemDTO;
+import se.bjurr.wiremock.test.example_apis.ExampleApi;
+import se.bjurr.wiremock.test.example_apis.model.StringDTO;
 import se.bjurr.wiremock.test.testutils.AcceptanceTestBase;
 
 public class UsageExamplesTest extends AcceptanceTestBase {
 
   @Test
-  public void getItems() {
+  public void getWithSingleProduces() {
     final StubMapping sm =
         stubFor( //
-            invocation(ListResouce.class, (r) -> r.getItems()) //
-                .willReturn(aResponse().withStatus(SC_ACCEPTED), asList(new ItemDTO("pong"))));
+            invocation(ExampleApi.class, (r) -> r.getWithSingleProduces()) //
+                .willReturn(aResponse().withStatus(SC_ACCEPTED), new StringDTO("whatever")));
 
     final String actual = StubMapping.buildJsonStringFor(this.setStaticUUIDs(sm));
 
     assertThat(actual) //
         .isEqualToIgnoringWhitespace(
             """
-        		{
-      		  "id" : "d68fb4e2-48ed-40d2-bc73-0a18f54f3ece",
-      		  "request" : {
-      		    "urlPattern" : ".*/list$",
-      		    "method" : "GET",
-      		    "headers" : {
-      		      "Accept" : {
-      		        "equalTo" : "application/json"
-      		      }
-      		    }
-      		  },
-      		  "response" : {
-      		    "status" : 202,
-      		    "body" : "[ {\\n  \\"str\\" : \\"pong\\",\\n  \\"id\\" : 0\\n} ]",
-      		    "headers" : {
-      		      "Content-Type" : "application/json"
-      		    }
-      		  },
-      		  "uuid" : "d68fb4e2-48ed-40d2-bc73-0a18f54f3ece"
-      		}
-      		""");
+{
+  "id" : "d68fb4e2-48ed-40d2-bc73-0a18f54f3ece",
+  "request" : {
+    "urlPattern" : ".*/getWithSingleProduces$",
+    "method" : "GET",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      }
+    }
+  },
+  "response" : {
+    "status" : 202,
+    "body" : "{\\n  \\"str\\" : \\"whatever\\"\\n}",
+    "headers" : {
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "d68fb4e2-48ed-40d2-bc73-0a18f54f3ece"
+}
+""");
 
     given() //
         .accept("application/json") //
-        .get("/list") //
+        .get("/getWithSingleProduces") //
         .then()
         .assertThat() //
         .statusCode(SC_ACCEPTED) //
@@ -61,62 +62,49 @@ public class UsageExamplesTest extends AcceptanceTestBase {
   }
 
   @Test
-  public void createItem() {
+  public void getWithMultipleProduces() {
     final StubMapping sm =
         stubFor( //
-            invocation(ListResouce.class, (r) -> r.post(new ItemDTO("the item"))) //
-                .willReturn(
-                    aResponse().withStatus(SC_ACCEPTED), new ItemDTO("the item").setId(123)));
+            invocation(
+                    ExampleApi.class,
+                    (r) -> r.getWithMultipleProduces(),
+                    withMediaTypes().producing(MediaType.APPLICATION_JSON)) //
+                .willReturn(aResponse().withStatus(SC_ACCEPTED), new StringDTO("whatever")));
 
     final String actual = StubMapping.buildJsonStringFor(this.setStaticUUIDs(sm));
 
     assertThat(actual) //
         .isEqualToIgnoringWhitespace(
             """
-    		{
-      		  "id" : "d68fb4e2-48ed-40d2-bc73-0a18f54f3ece",
-      		  "request" : {
-      		    "urlPattern" : ".*/create$",
-      		    "method" : "POST",
-      		    "headers" : {
-      		      "Content-Type" : {
-      		        "equalTo" : "application/json"
-      		      },
-      		      "Accept" : {
-      		        "equalTo" : "application/json"
-      		      }
-      		    },
-      		    "bodyPatterns" : [ {
-      		      "equalToJson" : "{\\n  \\"str\\" : \\"the item\\",\\n  \\"id\\" : 0\\n}",
-      		      "ignoreArrayOrder" : true,
-      		      "ignoreExtraElements" : true
-      		    } ]
-      		  },
-      		  "response" : {
-      		    "status" : 202,
-      		    "body" : "{\\n  \\"str\\" : \\"the item\\",\\n  \\"id\\" : 123\\n}",
-      		    "headers" : {
-      		      "Content-Type" : "application/json"
-      		    }
-      		  },
-      		  "uuid" : "d68fb4e2-48ed-40d2-bc73-0a18f54f3ece"
-      		}
-      		""");
+{
+  "id" : "d68fb4e2-48ed-40d2-bc73-0a18f54f3ece",
+  "request" : {
+    "urlPattern" : ".*/getWithMultipleProduces$",
+    "method" : "GET",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      }
+    }
+  },
+  "response" : {
+    "status" : 202,
+    "body" : "{\\n  \\"str\\" : \\"whatever\\"\\n}",
+    "headers" : {
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "d68fb4e2-48ed-40d2-bc73-0a18f54f3ece"
+}
+""");
 
     given() //
         .accept("application/json") //
-        .contentType("application/json") //
-        .request() //
-        .body("""
-{
-  "str" : "the item",
-  "id" : 0
-}
-""") //
-        .post("/create") //
+        .get("/getWithMultipleProduces") //
         .then()
         .assertThat() //
-        .contentType("application/json") //
-        .statusCode(SC_ACCEPTED);
+        .statusCode(SC_ACCEPTED) //
+        .and() //
+        .contentType("application/json");
   }
 }

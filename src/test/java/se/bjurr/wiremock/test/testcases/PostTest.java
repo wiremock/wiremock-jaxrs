@@ -9,7 +9,7 @@ import se.bjurr.wiremock.test.example_apis.PostResouce;
 import se.bjurr.wiremock.test.example_apis.model.StringDTO;
 import se.bjurr.wiremock.test.testutils.AcceptanceTestBase;
 
-public class PostIntergrationTest extends AcceptanceTestBase {
+public class PostTest extends AcceptanceTestBase {
   @Test
   public void createStringWithResponse() {
     final StringDTO stringDtoCreate = new StringDTO("create");

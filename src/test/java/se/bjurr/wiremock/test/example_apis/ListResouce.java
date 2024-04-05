@@ -20,6 +20,5 @@ public interface ListResouce {
   @Path("/create")
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public ItemDTO post(ItemDTO item);
+  public void create(List<ItemDTO> item);
 }

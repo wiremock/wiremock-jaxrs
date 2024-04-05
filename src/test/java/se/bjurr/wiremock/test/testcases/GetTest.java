@@ -9,7 +9,7 @@ import se.bjurr.wiremock.test.example_apis.GetResouce;
 import se.bjurr.wiremock.test.example_apis.model.StringDTO;
 import se.bjurr.wiremock.test.testutils.AcceptanceTestBase;
 
-public class GetIntergrationTest extends AcceptanceTestBase {
+public class GetTest extends AcceptanceTestBase {
   @Test
   public void getWithResponseObject() {
     assertThatApi(GetResouce.class)
