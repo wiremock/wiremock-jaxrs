@@ -2,6 +2,12 @@
 
 Changelog of wiremock-jaxrs.
 
+## 1.1.0 (2024-04-05)
+
+### Features
+
+-  supporting multiple consumes and multiple produces ([6b90a](https://github.com/wiremock/wiremock-jaxrs/commit/6b90af29e461cde) Tomas Bjerre)  
+
 ## 1.0.0 (2024-04-03)
 
 ### Breaking changes
