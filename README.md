@@ -20,7 +20,7 @@ It will create a [Wiremock stub](http://wiremock.org/docs/stubbing/) by gatherin
 It extends, and works just like, [Wiremock](http://wiremock.org/docs/stubbing/) by adding a new factory method:
 
 ```java
-WiremockJaxrs.invocation(Class<T> resource, ResourceInvocation<T> invocation)
+WireMockJaxrs.invocation(Class<T> resource, ResourceInvocation<T> invocation)
 ```
 
 That is used like:
