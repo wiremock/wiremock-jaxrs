@@ -2,6 +2,12 @@
 
 Changelog of wiremock-jaxrs.
 
+## 1.1.1 (2024-04-23)
+
+### Bug Fixes
+
+-  avoid adding Wiremock as transitive ([e17bb](https://github.com/wiremock/wiremock-jaxrs/commit/e17bb3a85c2cfd2) Tomas Bjerre)  
+
 ## 1.1.0 (2024-04-05)
 
 ### Features
