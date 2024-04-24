@@ -2,6 +2,12 @@
 
 Changelog of wiremock-jaxrs.
 
+## 1.1.2 (2024-04-24)
+
+### Bug Fixes
+
+-  adding jackson-dataformat-xml as transitive ([8f9ac](https://github.com/wiremock/wiremock-jaxrs/commit/8f9ac773ba4dbc5) Tomas Bjerre)  
+
 ## 1.1.1 (2024-04-23)
 
 ### Bug Fixes
